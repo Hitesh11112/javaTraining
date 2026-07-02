@@ -1,8 +1,6 @@
-package com.Shape;
+package AreaPerimeter;
  
-public abstract class Shape {
- 
+public abstract class Shape { 
     abstract void area();
- 
     abstract void perimeter();
 }

@@ -1,22 +1,20 @@
-package com.Shape;
+package AreaPerimeter;
 
 public class Circle extends Shape {
 	 
     private double radius;
  
-    // Non-Parameterized Constructor
     public Circle() {
         this.radius = 1;
     }
  
-    // Parameterized Constructor
     public Circle(double radius) {
         this.radius = radius;
     }
  
     @Override
     void area() {
-        System.out.println("Area of Circle = " + (Math.PI * radius * radius));
+        System.out.println("Area of Circle = " + (3.14 * radius * radius));
     }
  
     @Override

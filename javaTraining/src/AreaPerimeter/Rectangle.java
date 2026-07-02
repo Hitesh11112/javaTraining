@@ -1,4 +1,4 @@
-package com.Shape;
+package AreaPerimeter;
 
 public class Rectangle extends Shape {
 	 
