@@ -1,4 +1,4 @@
-package Day_2July.SwitchCase;
+package DayWiseAssignment.Day_2July.SwitchCase;
 
 import java.util.Scanner;
 

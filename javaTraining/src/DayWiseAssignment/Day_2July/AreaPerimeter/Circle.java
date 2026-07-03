@@ -1,4 +1,4 @@
-package Day_2July.AreaPerimeter;
+package DayWiseAssignment.Day_2July.AreaPerimeter;
 
 public class Circle extends Shape {
 	 

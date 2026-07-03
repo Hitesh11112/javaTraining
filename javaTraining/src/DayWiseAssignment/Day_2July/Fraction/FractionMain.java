@@ -1,4 +1,4 @@
-package Day_2July.Fraction;
+package DayWiseAssignment.Day_2July.Fraction;
 
 import java.util.Scanner;
 
