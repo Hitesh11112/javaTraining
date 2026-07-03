@@ -1,4 +1,4 @@
-package AreaPerimeter;
+package Day_2July.AreaPerimeter;
 
 public class Rectangle extends Shape {
 	 

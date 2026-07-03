@@ -1,4 +1,4 @@
-package Fraction;
+package Day_2July.Fraction;
 
 import java.util.Scanner;
 

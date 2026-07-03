@@ -1,4 +1,4 @@
-package AreaPerimeter;
+package Day_2July.AreaPerimeter;
 
 public class Main {
 	public static void main(String[] args) {

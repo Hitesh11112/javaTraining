@@ -1,4 +1,4 @@
-package SwitchCase;
+package Day_2July.SwitchCase;
 
 import java.util.Scanner;
 
