@@ -103,6 +103,7 @@ public class Array {
 		System.out.println(arr2.hashCode());
 		System.out.println(cloned.hashCode());
 		
+		arr2.add(500);
 		System.out.println("******************");
 		
     }
