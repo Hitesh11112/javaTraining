@@ -1,23 +1,56 @@
 package SwitchCase;
 
+import java.util.Scanner;
+
 public class Main {
-	public static void main(String[] arg) {
-		
-		for(int i = 0; i < 11; ++i) {
-			switch(i) {			
-				case 0:
-					System.out.print("start of the for loop\n");
-					break;
-				case 5:
-					System.out.print("Middle of the for loop\n");
-					break;
-				case 10:
-					System.out.print("End of the for loop\n");
-					break;
-				default:
-					System.out.print("current value: "+ i +"\n");
-			}
-				
-		}
-	}
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter first number: ");
+        double num1 = sc.nextDouble();
+
+        System.out.print("Enter second number: ");
+        double num2 = sc.nextDouble();
+
+        System.out.print("Enter operator (+, -, *, /, %): ");
+        char op = sc.next().charAt(0);
+
+        switch (op) {
+
+            case '+':
+                System.out.println("Result = " + (num1 + num2));
+                break;
+
+            case '-':
+                System.out.println("Result = " + (num1 - num2));
+                break;
+
+            case '*':
+                System.out.println("Result = " + (num1 * num2));
+                break;
+
+            case '/':
+                if (num2 != 0) {
+                    System.out.println("Result = " + (num1 / num2));
+                } else {
+                    System.out.println("Division by zero is not allowed.");
+                }
+                break;
+
+            case '%':
+                if (num2 != 0) {
+                    System.out.println("Result = " + (num1 % num2));
+                } else {
+                    System.out.println("Modulo by zero is not allowed.");
+                }
+                break;
+
+            default:
+                System.out.println("Invalid operator!");
+        }
+
+        sc.close();
+    }
 }
