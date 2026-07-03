@@ -26,24 +26,10 @@ public class FractionMain {
         int numerator = (num1 * den2) + (num2 * den1);
         int denominator = den1 * den2;
 
-        // Simplify the fraction
-        int gcd = findGCD(numerator, denominator);
-
-        numerator /= gcd;
-        denominator /= gcd;
-
         System.out.println("Sum = " + numerator + "/" + denominator);
 
         sc.close();
     }
 
-    // Method to find GCD
-    static int findGCD(int a, int b) {
-        while (b != 0) {
-            int temp = b;
-            b = a % b;
-            a = temp;
-        }
-        return a;
-    }
+    
 }
