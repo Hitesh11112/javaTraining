@@ -1,6 +1,7 @@
 package javaOnlineMeeting.Collections;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.ListIterator;
 
@@ -105,6 +106,8 @@ public class Array {
 		
 		arr2.add(500);
 		System.out.println("******************");
+		
+		Collections.sort(arr2);
 		
     }
 }
