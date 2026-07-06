@@ -1,3 +1,8 @@
+/*
+ * Employee Class
+ * 
+ **/
+
 package DayWiseAssignment.Day_3July;
 
 import java.util.Arrays;
@@ -22,54 +27,36 @@ class Employees implements Comparable<Employees> {
 
     public String getName() { return name; }
 
-    public double getSalary() {
-        return salary;
-    }
+    public double getSalary() { return salary; }
 
-    public String getAddress() {
-        return address;
-    }
+    public String getAddress() { return address; }
 
     // Setters
-    public void setId(int id) {
-        this.id = id;
-    }
+    public void setId(int id) { this.id = id; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public void setName(String name) { this.name = name; }
 
-    public void setSalary(double salary) {
-        this.salary = salary;
-    }
+    public void setSalary(double salary) { this.salary = salary; }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
+    public void setAddress(String address) { this.address = address; }
 
     // toString Method
     @Override
     public String toString() {
-        return "Employee ID : " + id +
-               "\nName        : " + name +
-               "\nSalary      : " + salary +
+        return "Employee ID : " + id + "\nName        : " + name + "\nSalary      : " + salary +
                "\nAddress     : " + address +
                "\n----------------------------";
     }
     
     @Override
-    public int compareTo(Employees e) {
-        return Double.compare(this.salary, e.salary);
-    }
+    public int compareTo(Employees e) { return Double.compare(this.salary, e.salary); }
 }
 
 public class EmployeeClass {
 
     public static void main(String[] args) {
-
         Scanner sc = new Scanner(System.in);
 
-        // Array of Employees objects
         Employees[] emp = new Employees[10];
 
         System.out.println("Enter details of 10 employees:");
@@ -97,12 +84,16 @@ public class EmployeeClass {
 
         Arrays.sort(emp);
 
-        System.out.println("\n******** Employee Details (Sorted by Salary) ********");
+        System.out.println("\n Employee Details (Sorted by Salary)");
 
         for (Employees e : emp) {
             System.out.println(e);
         }
-
+        
+        
+        System.out.println("*****************************");
+        System.out.println(" All Detail in Single line ");
+        System.out.println(Arrays.toString(emp));
         sc.close();
     }
 }
