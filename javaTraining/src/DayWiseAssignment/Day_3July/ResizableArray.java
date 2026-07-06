@@ -19,7 +19,8 @@ public class ResizableArray {
         if (size == arr.length) {
             resize();
         }
-        arr[size++] = value;
+        arr[size] = value;
+        size +=1;
     }
 
     // Resize array
@@ -41,7 +42,7 @@ public class ResizableArray {
 
         list.add(10);
         list.add(20);
-        list.add(30); // Resizes here
+        list.add(30);
         list.add(40);
         list.add(50);
 
