@@ -20,13 +20,17 @@ public class RemoveDuplicate {
 	// Remove a given element from the array
 	 static void RemoveGivenDuplicate(ArrayList<Integer> arr, int target) {
 
-		 while (arr.contains(target)) {
-			 arr.remove(Integer.valueOf(target));
+		 ArrayList<Integer> ans = new ArrayList<>();
+
+		 for(int num : arr) {
+			 if(num != target) {
+				 ans.add(num);
+			 }
 		 }
 
 		 System.out.println("Array after removing " + target + ":");
-		 System.out.println(arr);
-	 }
+		 System.out.println(ans);
+	}
 	    
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
