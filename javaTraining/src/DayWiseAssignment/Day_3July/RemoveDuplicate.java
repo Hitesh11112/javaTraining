@@ -10,14 +10,24 @@ import java.util.*;
 
 public class RemoveDuplicate {
 	
-	static void RemoveAllDuplicate() {
-		
-	}
+	 static void RemoveAllDuplicate(ArrayList<Integer> arr) {
+		 HashSet<Integer> st = new HashSet<>(arr);
+
+		 System.out.println("Array after removing duplicates:");
+	     System.out.println(st);
+	 }
 	
-	static void RemoveGivenDuplicate() {
-		
-	}
-	
+	// Remove a given element from the array
+	 static void RemoveGivenDuplicate(ArrayList<Integer> arr, int target) {
+
+		 while (arr.contains(target)) {
+			 arr.remove(Integer.valueOf(target));
+		 }
+
+		 System.out.println("Array after removing " + target + ":");
+		 System.out.println(arr);
+	 }
+	    
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 		
@@ -31,7 +41,18 @@ public class RemoveDuplicate {
 			arr.add(sc.nextInt());
 		}
 		
-		
+		System.out.println("Original Array:");
+	    System.out.println(arr);
+	    
+	    // Remove a specific element
+        System.out.println("Enter the element to remove:");
+        int target = sc.nextInt();
+        
+	    // Remove all duplicates
+        RemoveAllDuplicate(arr);
+
+        //Remove on given element
+        RemoveGivenDuplicate(arr, target);
 		
 		sc.close();
 	}
