@@ -2,16 +2,12 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds') // Jenkins credential ID (username/password)
-        DOCKERHUB_USER        = 'yourdockerhubusername'
-        IMAGE_NAME            = 'day16-springboot'
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
+        DOCKERHUB_USER        = 'hiteshpatwal'
+        IMAGE_NAME            = 'spring-boot-bookapp'
         IMAGE_TAG             = "${env.BUILD_NUMBER}"
-        KUBECONFIG            = credentials('minikube-kubeconfig') // Jenkins "Secret file" credential
-    }
-
-    tools {
-        maven 'Maven-3.9' // must match name in Jenkins > Global Tool Configuration
-        jdk 'JDK-17'
+        KUBECONFIG            = 'C:\\Users\\hites\\.kube\\config'
+        PROJECT_DIR           = 'javaTraining\\src\\DayWiseAssignment\\Day_16_07_26_springboot'
     }
 
     stages {
@@ -19,55 +15,57 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/yourusername/Day_16_07_26_springboot.git'
+                    url: 'https://github.com/Hitesh11112/javaTraining.git'
             }
         }
 
         stage('Build') {
             steps {
-                sh 'mvn clean package -DskipTests'
+                dir("${PROJECT_DIR}") {
+                    bat 'mvnw.cmd clean package -DskipTests'
+                }
             }
         }
 
         stage('Docker Build') {
             steps {
-                sh "docker build -t ${DOCKERHUB_USER}/${IMAGE_NAME}:${IMAGE_TAG} ."
+                dir("${PROJECT_DIR}") {
+                    bat "docker build -t %DOCKERHUB_USER%/%IMAGE_NAME%:%IMAGE_TAG% ."
+                }
             }
         }
 
         stage('Docker Push') {
             steps {
-                sh "echo ${DOCKERHUB_CREDENTIALS_PSW} | docker login -u ${DOCKERHUB_CREDENTIALS_USR} --password-stdin"
-                sh "docker push ${DOCKERHUB_USER}/${IMAGE_NAME}:${IMAGE_TAG}"
+                bat "echo %DOCKERHUB_CREDENTIALS_PSW% | docker login -u %DOCKERHUB_CREDENTIALS_USR% --password-stdin"
+                bat "docker push %DOCKERHUB_USER%/%IMAGE_NAME%:%IMAGE_TAG%"
             }
         }
 
         stage('Deploy to Minikube') {
             steps {
-                sh """
-                    sed -i 's|IMAGE_TAG_PLACEHOLDER|${IMAGE_TAG}|g' k8s/deployment.yaml
-                    kubectl apply -f k8s/deployment.yaml
-                    kubectl apply -f k8s/service.yaml
-                """
+                dir("${PROJECT_DIR}") {
+                    bat "kubectl apply -f k8s/book.yml"
+                }
             }
         }
 
         stage('Verify Rollout') {
             steps {
-                sh "kubectl rollout status deployment/${IMAGE_NAME} --timeout=90s"
+                bat "kubectl rollout status deployment/book-deployment --timeout=90s"
             }
         }
     }
 
     post {
         success {
-            echo "✅ Build #${IMAGE_TAG} deployed to Minikube successfully"
+            echo "Build #${IMAGE_TAG} deployed to Minikube successfully"
         }
         failure {
-            echo "❌ Pipeline failed — check console output above"
+            echo "Pipeline failed — check console output above"
         }
         always {
-            sh 'docker logout'
+            bat 'docker logout'
         }
     }
 }
