@@ -6,12 +6,12 @@ spring:
       ddl-auto: update
     show-sql: true
   datasource:
-    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/coforge2db
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/bookDB
     username: root
-    password: ''
+    password: hitesh@123
   profiles:
     active: Prod
-  
+
 server:
   port: 8085
 management:
