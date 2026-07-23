@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: Day_16_07_26_springboot
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/coforge2db
+    username: root
+    password: ''
+  profiles:
+    active: Prod
+  
+server:
+  port: 8085
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+      base-path: /actuator
+logging:
+  level:
+    root: INFO
+    com:
+      coforge: DEBUG
+  file:
+    name: logs/app.log
+  pattern:
+    console: '%d{yyyy-MM-dd HH:mm:ss} %-5level [%thread] %logger{36} - %msg%n'
+    file: '%d{yyyy-MM-dd HH:mm:ss} %-5level [%thread] %logger{36} - %msg%n'
