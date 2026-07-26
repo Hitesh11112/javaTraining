@@ -51,32 +51,30 @@ pipeline {
             }
         }
         stage('Push to Docker Hub') {
-            steps {
-                withCredentials([
-                    usernamePassword(
-                        credentialsId: 'dockerhub-creds',
-                        usernameVariable: 'DOCKER_USERNAME',
-                        passwordVariable: 'DOCKER_PASSWORD'
-                    )
-                ]) {
-                    bat '''
-                        echo %DOCKER_PASSWORD% | docker login ^
-                          --username %DOCKER_USERNAME% ^
-                          --password-stdin
-                        if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
-
-                        docker push %DOCKER_IMAGE%:%BUILD_NUMBER%
-                        if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
-
-                        docker push %DOCKER_IMAGE%:latest
-                        if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
-                    '''
-                    // ADDED: error checks after login and each push — previously docker login
-                    // failed with "unauthorized" but the stage still passed because docker push
-                    // succeeded using stale cached credentials on the agent
-                }
-            }
-        }
+		    steps {
+		        withCredentials([
+		            usernamePassword(
+		                credentialsId: 'dockerhub-creds',
+		                usernameVariable: 'DOCKER_USERNAME',
+		                passwordVariable: 'DOCKER_PASSWORD'
+		            )
+		        ]) {
+		            bat '''
+		                REM CHANGED: Replaced "echo %DOCKER_PASSWORD% | docker login --password-stdin"
+		                REM with "--password" because Windows cmd.exe was causing Docker Hub
+		                REM authentication to fail when using the piped stdin method.
+		                docker login --username %DOCKER_USERNAME% --password %DOCKER_PASSWORD%
+		                if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+		
+		                docker push %DOCKER_IMAGE%:%BUILD_NUMBER%
+		                if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+		
+		                docker push %DOCKER_IMAGE%:latest
+		                if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+		            '''
+		        }
+		    }
+		}
         stage('Deploy MySQL') {
             steps {
                 dir("${PROJECT_DIR}") {
