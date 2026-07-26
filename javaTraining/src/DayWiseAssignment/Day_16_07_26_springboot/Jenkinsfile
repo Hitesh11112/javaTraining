@@ -10,7 +10,7 @@ pipeline {
     environment {
         DOCKER_IMAGE   = 'hiteshpatwal/spring-boot-bookapp'
         K8S_DEPLOYMENT = 'book-deployment'
-        K8S_CONTAINER  = 'book-app'
+        K8S_CONTAINER  = 'book-service'  // CHANGED: was 'book-app', which doesn't exist in book.yml — this caused "unable to find container named book-app" and silently skipped the image update
         MYSQL_MANIFEST = 'k8s/mysql.yml'
         BOOK_MANIFEST  = 'k8s/book.yml'
         PROJECT_DIR    = 'javaTraining\\src\\DayWiseAssignment\\Day_16_07_26_springboot'
@@ -28,7 +28,11 @@ pipeline {
         stage('Build Spring Boot') {
             steps {
                 dir("${PROJECT_DIR}") {
-                    bat 'mvnw.cmd clean package -DskipTests'
+                    bat '''
+                        mvnw.cmd clean package -DskipTests
+                        if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+                    '''
+                    // ADDED: error check above — without it, a failed Maven build wouldn't fail this stage
                 }
             }
         }
@@ -40,7 +44,9 @@ pipeline {
                           -t %DOCKER_IMAGE%:%BUILD_NUMBER% ^
                           -t %DOCKER_IMAGE%:latest ^
                           .
+                        if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
                     '''
+                    // ADDED: error check above
                 }
             }
         }
@@ -57,9 +63,17 @@ pipeline {
                         echo %DOCKER_PASSWORD% | docker login ^
                           --username %DOCKER_USERNAME% ^
                           --password-stdin
+                        if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+
                         docker push %DOCKER_IMAGE%:%BUILD_NUMBER%
+                        if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+
                         docker push %DOCKER_IMAGE%:latest
+                        if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
                     '''
+                    // ADDED: error checks after login and each push — previously docker login
+                    // failed with "unauthorized" but the stage still passed because docker push
+                    // succeeded using stale cached credentials on the agent
                 }
             }
         }
@@ -68,9 +82,12 @@ pipeline {
                 dir("${PROJECT_DIR}") {
                     bat '''
                         kubectl apply -f %MYSQL_MANIFEST%
-                        kubectl rollout status deployment/mysql-deployment ^
-                          --timeout=180s
+                        if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+
+                        kubectl rollout status deployment/mysql-deployment --timeout=180s
+                        if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
                     '''
+                    // ADDED: error checks
                 }
             }
         }
@@ -79,13 +96,18 @@ pipeline {
                 dir("${PROJECT_DIR}") {
                     bat '''
                         kubectl apply -f %BOOK_MANIFEST%
-                        kubectl set image ^
-                          deployment/%K8S_DEPLOYMENT% ^
-                          %K8S_CONTAINER%=%DOCKER_IMAGE%:%BUILD_NUMBER%
-                        kubectl rollout status ^
-                          deployment/%K8S_DEPLOYMENT% ^
-                          --timeout=300s
+                        if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+
+                        kubectl set image deployment/%K8S_DEPLOYMENT% %K8S_CONTAINER%=%DOCKER_IMAGE%:%BUILD_NUMBER%
+                        if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+
+                        kubectl rollout status deployment/%K8S_DEPLOYMENT% --timeout=300s
+                        if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
                     '''
+                    // ADDED: error checks — this is the stage that was silently failing before.
+                    // With K8S_CONTAINER now fixed to 'book-service' AND this error check in place,
+                    // a future name mismatch or kubectl failure will actually fail the build
+                    // instead of reporting false success
                 }
             }
         }
@@ -101,6 +123,7 @@ pipeline {
                     echo ===== Services =====
                     kubectl get services
                 '''
+                // UNCHANGED — purely informational stage, no fix needed here
             }
         }
     }
