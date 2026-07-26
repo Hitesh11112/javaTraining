@@ -1,68 +1,115 @@
 pipeline {
     agent any
-
-    environment {
-        DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
-        DOCKERHUB_USER        = 'hiteshpatwal'
-        IMAGE_NAME            = 'spring-boot-bookapp'
-        IMAGE_TAG             = "${env.BUILD_NUMBER}"
-        KUBECONFIG            = 'C:\\Users\\hites\\.kube\\config'
-        PROJECT_DIR           = 'javaTraining\\src\\DayWiseAssignment\\Day_16_07_26_springboot'
+    /*
+     * Jenkins is running locally on Windows.
+     * GitHub cannot directly call localhost, so Jenkins polls GitHub.
+     */
+    triggers {
+        pollSCM('H/2 * * * *')
     }
-
+    environment {
+        DOCKER_IMAGE   = 'hiteshpatwal/spring-boot-bookapp'
+        K8S_DEPLOYMENT = 'book-deployment'
+        K8S_CONTAINER  = 'book-app'
+        MYSQL_MANIFEST = 'k8s/mysql.yml'
+        BOOK_MANIFEST  = 'k8s/book.yml'
+        PROJECT_DIR    = 'javaTraining\\src\\DayWiseAssignment\\Day_16_07_26_springboot'
+    }
+    options {
+        disableConcurrentBuilds()
+        timestamps()
+    }
     stages {
-
-        stage('Checkout') {
+        stage('Checkout GitHub') {
             steps {
-                git branch: 'main',
-                    url: 'https://github.com/Hitesh11112/javaTraining.git'
+                checkout scm
             }
         }
-
-        stage('Build') {
+        stage('Build Spring Boot') {
             steps {
                 dir("${PROJECT_DIR}") {
                     bat 'mvnw.cmd clean package -DskipTests'
                 }
             }
         }
-
-        stage('Docker Build') {
+        stage('Build Docker Image') {
             steps {
                 dir("${PROJECT_DIR}") {
-                    bat "docker build -t %DOCKERHUB_USER%/%IMAGE_NAME%:%IMAGE_TAG% ."
+                    bat '''
+                        docker build ^
+                          -t %DOCKER_IMAGE%:%BUILD_NUMBER% ^
+                          -t %DOCKER_IMAGE%:latest ^
+                          .
+                    '''
                 }
             }
         }
-
-        stage('Docker Push') {
+        stage('Push to Docker Hub') {
             steps {
-                bat "echo %DOCKERHUB_CREDENTIALS_PSW%| docker login -u %DOCKERHUB_CREDENTIALS_USR% --password-stdin"
-                bat "docker push %DOCKERHUB_USER%/%IMAGE_NAME%:%IMAGE_TAG%"
-            }
-        }
-
-        stage('Deploy to Minikube') {
-            steps {
-                dir("${PROJECT_DIR}") {
-                    bat "kubectl apply -f k8s/book.yml"
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'dockerhub-creds',
+                        usernameVariable: 'DOCKER_USERNAME',
+                        passwordVariable: 'DOCKER_PASSWORD'
+                    )
+                ]) {
+                    bat '''
+                        echo %DOCKER_PASSWORD% | docker login ^
+                          --username %DOCKER_USERNAME% ^
+                          --password-stdin
+                        docker push %DOCKER_IMAGE%:%BUILD_NUMBER%
+                        docker push %DOCKER_IMAGE%:latest
+                    '''
                 }
             }
         }
-
-        stage('Verify Rollout') {
+        stage('Deploy MySQL') {
             steps {
-                bat "kubectl rollout status deployment/book-deployment --timeout=90s"
+                dir("${PROJECT_DIR}") {
+                    bat '''
+                        kubectl apply -f %MYSQL_MANIFEST%
+                        kubectl rollout status deployment/mysql-deployment ^
+                          --timeout=180s
+                    '''
+                }
+            }
+        }
+        stage('Deploy Book Application') {
+            steps {
+                dir("${PROJECT_DIR}") {
+                    bat '''
+                        kubectl apply -f %BOOK_MANIFEST%
+                        kubectl set image ^
+                          deployment/%K8S_DEPLOYMENT% ^
+                          %K8S_CONTAINER%=%DOCKER_IMAGE%:%BUILD_NUMBER%
+                        kubectl rollout status ^
+                          deployment/%K8S_DEPLOYMENT% ^
+                          --timeout=300s
+                    '''
+                }
+            }
+        }
+        stage('Verify Deployment') {
+            steps {
+                bat '''
+                    echo ===== Kubernetes node =====
+                    kubectl get nodes
+                    echo ===== Deployments =====
+                    kubectl get deployments
+                    echo ===== Pods =====
+                    kubectl get pods
+                    echo ===== Services =====
+                    kubectl get services
+                '''
             }
         }
     }
-
     post {
         success {
-            echo "Build #${IMAGE_TAG} deployed to Minikube successfully"
+            echo "Build ${BUILD_NUMBER} deployed successfully."
         }
         failure {
-            echo "Pipeline failed — check console output above"
+            echo "Pipeline failed. Check the failed stage and console output."
         }
         always {
             bat 'docker logout'
