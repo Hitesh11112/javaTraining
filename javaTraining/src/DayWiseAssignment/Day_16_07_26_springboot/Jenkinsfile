@@ -60,18 +60,15 @@ pipeline {
 		            )
 		        ]) {
 		            bat '''
-		                REM CHANGED: Replaced "echo %DOCKER_PASSWORD% | docker login --password-stdin"
-		                REM with "--password" because Windows cmd.exe was causing Docker Hub
-		                REM authentication to fail when using the piped stdin method.
-		                docker login --username %DOCKER_USERNAME% --password %DOCKER_PASSWORD%
-		                if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
-		
-		                docker push %DOCKER_IMAGE%:%BUILD_NUMBER%
-		                if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
-		
-		                docker push %DOCKER_IMAGE%:latest
-		                if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
-		            '''
+                        docker login --username %DOCKER_USERNAME% --password %DOCKER_PASSWORD%
+                        if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+
+                        docker push %DOCKER_IMAGE%:%BUILD_NUMBER%
+                        if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+
+                        docker push %DOCKER_IMAGE%:latest
+                        if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+                    '''
 		        }
 		    }
 		}
