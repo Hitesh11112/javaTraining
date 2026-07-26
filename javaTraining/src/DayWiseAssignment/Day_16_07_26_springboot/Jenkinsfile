@@ -5,8 +5,8 @@ pipeline {
      * GitHub cannot directly call localhost, so Jenkins polls GitHub.
      */
     triggers {
-        pollSCM('H/2 * * * *')
-    }
+	    pollSCM('H H * * *')
+	}
     environment {
         DOCKER_IMAGE   = 'hiteshpatwal/spring-boot-bookapp'
         K8S_DEPLOYMENT = 'book-deployment'
