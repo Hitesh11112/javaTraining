@@ -1,0 +1,136 @@
+<div class="container mt-4">
+
+    <div class="card">
+
+        <div class="card-header bg-primary text-white">
+            <h3>Update Employee</h3>
+        </div>
+
+        <div class="card-body">
+
+            <form [formGroup]="updateForm" (ngSubmit)="updateEmployee()">
+
+                <!-- Employee ID -->
+                <div class="mb-3">
+
+                    <label class="form-label">Employee ID</label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        formControlName="id"
+                        readonly>
+
+                    <small class="text-muted">
+                        Employee ID cannot be modified.
+                    </small>
+
+                </div>
+
+                <!-- Employee Name -->
+                <div class="mb-3">
+
+                    <label class="form-label">Employee Name</label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        formControlName="name">
+
+                    @if(name?.invalid && (name?.touched || name?.dirty)){
+
+                        <div class="text-danger mt-1">
+
+                            @if(name?.errors?.['required']){
+                                <small>Employee Name is required.</small>
+                            }
+
+                            @if(name?.errors?.['minlength']){
+                                <small>Minimum 3 characters are required.</small>
+                            }
+
+                            @if(name?.errors?.['maxlength']){
+                                <small>Maximum 30 characters are allowed.</small>
+                            }
+
+                            @if(name?.errors?.['pattern']){
+                                <small>Only alphabets and spaces are allowed.</small>
+                            }
+
+                        </div>
+
+                    }
+
+                </div>
+
+                <!-- Designation -->
+                <div class="mb-3">
+
+                    <label class="form-label">Designation</label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        formControlName="desg">
+
+                    @if(desg?.invalid && (desg?.touched || desg?.dirty)){
+
+                        <div class="text-danger mt-1">
+
+                            @if(desg?.errors?.['required']){
+                                <small>Designation is required.</small>
+                            }
+
+                            @if(desg?.errors?.['minlength']){
+                                <small>Minimum 2 characters are required.</small>
+                            }
+
+                            @if(desg?.errors?.['maxlength']){
+                                <small>Maximum 30 characters are allowed.</small>
+                            }
+
+                            @if(desg?.errors?.['pattern']){
+                                <small>Only alphabets and spaces are allowed.</small>
+                            }
+
+                        </div>
+
+                    }
+
+                </div>
+
+                <!-- Buttons -->
+
+                <button
+                    type="submit"
+                    class="btn btn-success"
+                    [disabled]="updateForm.invalid">
+
+                    Update Employee
+
+                </button>
+
+                <button
+                    type="reset"
+                    class="btn btn-warning ms-2">
+
+                    Reset
+
+                </button>
+
+                <button
+                    type="button"
+                    class="btn btn-secondary ms-2"
+                    (click)="cancel()">
+
+                    Cancel
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
