@@ -1,0 +1,91 @@
+<div class="card">
+    <div class="card-body">
+        <form #empForm="ngForm" (ngSubmit)="addEmployee()">
+            <div>
+                <label for=id class="form-label">Id</label>
+                <input type="number" 
+                class="form-control"
+                name="id"
+                id="id"
+                [(ngModel)]="emp.id"
+                #id="ngModel" 
+                required
+                min="1"/>
+                @if(id.invalid && (id.touched||empForm.submitted)){
+                <div class="error" >
+                    @if(id.errors?.['required']){
+                    <small>Emp id is required</small>
+                    }
+                    @if(id.errors?.['min']){
+                        <small>emp id must be more than 0</small>
+                    }
+                </div>
+            }
+            <div>
+                <label for="name" class="form-label">Name</label>
+                <input type="text" 
+                class="form-control"
+                name="name"
+                id="name"
+                [(ngModel)]="emp.name"
+                #name="ngModel"
+                required
+                minlength="3"
+                maxlength="30"
+                pattern="[a-zA-Z ]+"/>
+                 @if(name.invalid && (name.touched||empForm.submitted)){
+                    <div class="error">
+                        @if(name.errors?.['required'])
+                        {
+                            <small>Employee name is mandatory</small>
+                        }
+                        @if (name.errors?.['minlength']) {
+                            <small>employee name must be of min length 3</small>
+                        }
+                        @if (name.errors?.['maxlength']) {
+                            <small>employee name can't be exceeded more than 30 chars</small>
+                        }
+                        @if(name.errors?.['pattern']){
+                            <small>Employee name should contain only alphabets</small>
+                        }
+                    </div>
+                 }
+            </div>
+            <div>
+                <label for="desg" class="form-label">Desg</label>
+                <input type="text" 
+                class="form-control"
+                name="desg"
+                id="desg"
+                [(ngModel)]="emp.desg"
+                #desg="ngModel"
+                required
+                minlength="3"
+                maxlength="10"
+                pattern="[a-zA-Z ]+"/>
+                 @if(desg.invalid && (desg.touched||empForm.submitted)){
+                    <div class="error">
+                        @if(desg.errors?.['required'])
+                        {
+                            <small>Employee desg is mandatory</small>
+                        }
+                        @if (desg.errors?.['minlength']) {
+                            <small>employee desg must be of min length 3</small>
+                        }
+                        @if (desg.errors?.['maxlength']) {
+                            <small>employee desg can't be exceeded more than 10 chars</small>
+                        }
+                        @if(desg.errors?.['pattern']){
+                            <small>Employee desg should contain only alphabets</small>
+                        }
+                    </div>
+                 }
+            </div>
+            <div>
+                <button class="btn btn-success mt-2"
+                type="submit" [disabled]="empForm.invalid">Add Employee</button>
+            </div>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,35 @@
+{
+  "employees": [
+    {
+      "id": "1",
+      "name": "Rahul Sharma",
+      "desg": "Software Engineer"
+    },
+    {
+      "id": "2",
+      "name": "Priya Reddy",
+      "desg": "UI Developer"
+    },
+    {
+      "id": "3",
+      "name": "Amit Kumar",
+      "desg": "Java Developer"
+    },
+    {
+      "id": "4",
+      "name": "Sneha Patel",
+      "desg": "QA Engineer"
+    },
+    {
+      "id": "5",
+      "name": "Arjun Singh",
+      "desg": "DevOps Engineer"
+    },
+    {
+      "id": "1yj9CXUobO4",
+      "name": "Swapna Motupally",
+      "desg": "Trainer"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
