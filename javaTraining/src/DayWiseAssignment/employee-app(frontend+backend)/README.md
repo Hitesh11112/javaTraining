@@ -217,10 +217,3 @@ The app will be available at **http://localhost:4200**.
 
 - Employee IDs are **client-assigned** (no `@GeneratedValue`), so uniqueness is enforced at the application layer, not the database's auto-increment.
 - `spring.jpa.hibernate.ddl-auto=update` will not modify existing column constraints (e.g., removing `AUTO_INCREMENT`) — schema changes affecting existing columns require a manual `ALTER TABLE` or a fresh table.
-
----
-
-## 👤 Author
-
-**Hitesh Patwal**
-Java Full Stack Trainee — Coforge
