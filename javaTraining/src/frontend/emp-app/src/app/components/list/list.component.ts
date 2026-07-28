@@ -32,7 +32,7 @@ empList: Employee[] = []
         console.log("no employees", error)
       }
 
-    }) 
+    })
   }
   successMessage: string = '';
 
@@ -52,12 +52,19 @@ empList: Employee[] = []
 
     if (confirmation) {
 
-      this.empList = this.empList.filter(
-        emp => emp.id !== id
-      );
+      this.service.deleteEmployee(id).subscribe({
+        next: () => {
+          this.empList = this.empList.filter(
+            emp => emp.id !== id
+          );
 
-      this.successMessage =
-        `${employee.name} deleted successfully.`;
+          this.successMessage =
+            `${employee.name} deleted successfully.`;
+        },
+        error: (error) => {
+          console.log("could not delete employee", error);
+        }
+      });
     }
   }
 }

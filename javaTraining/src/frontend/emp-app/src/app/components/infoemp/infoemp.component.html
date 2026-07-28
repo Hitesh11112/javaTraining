@@ -1,61 +1,42 @@
 <div class="container mt-4">
-
   <div class="card">
-
     <div class="card-header bg-info">
-
       <h3 class="mb-0">
         Employee Information
       </h3>
-
     </div>
 
     <div class="card-body">
-
       @if (employee) {
-
         <div class="row mb-3">
-
           <div class="col-4">
             <strong>Employee ID</strong>
           </div>
-
           <div class="col-8">
             {{ employee.id }}
           </div>
-
         </div>
 
         <hr>
-
         <div class="row mb-3">
-
           <div class="col-4">
             <strong>Employee Name</strong>
           </div>
-
           <div class="col-8">
             {{ employee.name }}
           </div>
-
         </div>
 
         <hr>
-
         <div class="row mb-3">
-
           <div class="col-4">
             <strong>Designation</strong>
           </div>
-
           <div class="col-8">
             {{ employee.desg }}
           </div>
-
         </div>
-
         <hr>
-
         <button
           type="button"
           class="btn btn-primary"

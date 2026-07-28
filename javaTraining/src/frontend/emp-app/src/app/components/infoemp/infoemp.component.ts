@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Employee } from '../../model/employee';
+import { EmployeeService } from '../../services/employee.service';
 
 @Component({
   selector: 'app-infoemp',
@@ -8,84 +9,28 @@ import { Employee } from '../../model/employee';
   templateUrl: './infoemp.component.html',
   styleUrl: './infoemp.component.css'
 })
-export class InfoempComponent {
+export class InfoempComponent implements OnInit {
 
   employee?: Employee;
 
-  empList: Employee[] = [
-
-    {
-
-      id: 123,
-
-      name: 'Swapna',
-
-      desg: 'Trainer'
-
-    },
-
-    {
-
-      id: 122,
-
-      name: 'Swathi',
-
-      desg: 'Developer'
-
-    },
-
-    {
-
-      id: 124,
-
-      name: 'Swetha',
-
-      desg: 'Programmer'
-
-    },
-
-    {
-
-      id: 121,
-
-      name: 'Sruthi',
-
-      desg: 'Manager'
-
-    },
-
-    {
-
-      id: 125,
-
-      name: 'Srujana',
-
-      desg: 'Accountant'
-
-    }
-
-  ];
-
   constructor(
-
-    private activatedRoute: ActivatedRoute
-
+    private activatedRoute: ActivatedRoute,
+    private service: EmployeeService
   ) {}
 
   ngOnInit(): void {
 
-    const id = Number(
+    const id = Number(this.activatedRoute.snapshot.paramMap.get('id')) ?? '';
 
-      this.activatedRoute.snapshot.paramMap.get('id')
+    this.service.getEmployeeById(id).subscribe({
+      next: (employee: Employee) => {
+        this.employee = employee;
+      },
+      error: (error) => {
+        console.log("could not load employee", error);
+        this.employee = undefined;
+      }
+    });
 
-    );
-
-    this.employee = this.empList.find(
-
-      emp => emp.id === id
-
-    );
-
-  
   }
 }

@@ -2,28 +2,35 @@
     <div class="card-body">
         <form #empForm="ngForm" (ngSubmit)="addEmployee()">
             <div>
-                <label for=id class="form-label">Id</label>
-                <input type="number" 
+                <label for="id" class="form-label">Id</label>
+                <input type="number"
                 class="form-control"
                 name="id"
                 id="id"
                 [(ngModel)]="emp.id"
-                #id="ngModel" 
+                (ngModelChange)="idTakenError = false"
+                #id="ngModel"
                 required
-                min="1"/>
+                pattern="[a-zA-Z0-9]+"/>
                 @if(id.invalid && (id.touched||empForm.submitted)){
-                <div class="error" >
-                    @if(id.errors?.['required']){
-                    <small>Emp id is required</small>
-                    }
-                    @if(id.errors?.['min']){
-                        <small>emp id must be more than 0</small>
-                    }
-                </div>
-            }
+                    <div class="error">
+                        @if(id.errors?.['required']){
+                            <small>Emp id is required</small>
+                        }
+                        @if(id.errors?.['pattern']){
+                            <small>emp id must be alphanumeric</small>
+                        }
+                    </div>
+                }
+                @if(idTakenError){
+                    <div class="error">
+                        <small class="text-danger">This id is already taken. Please choose a different id.</small>
+                    </div>
+                }
+            </div>
             <div>
                 <label for="name" class="form-label">Name</label>
-                <input type="text" 
+                <input type="text"
                 class="form-control"
                 name="name"
                 id="name"
@@ -53,7 +60,7 @@
             </div>
             <div>
                 <label for="desg" class="form-label">Desg</label>
-                <input type="text" 
+                <input type="text"
                 class="form-control"
                 name="desg"
                 id="desg"
@@ -83,8 +90,7 @@
             </div>
             <div>
                 <button class="btn btn-success mt-2"
-                type="submit" [disabled]="empForm.invalid">Add Employee</button>
-            </div>
+                type="submit" [disabled]="empForm.invalid || checkingId">Add Employee</button>
             </div>
         </form>
     </div>

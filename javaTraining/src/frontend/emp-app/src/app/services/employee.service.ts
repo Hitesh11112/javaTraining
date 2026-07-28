@@ -18,7 +18,17 @@ export class EmployeeService {
   addEmployee(employee:Employee):Observable<any>{
     return this.http.post<any>(BASE_URL,employee)
   }
-  
 
+  getEmployeeById(id:number):Observable<Employee>{
+    return this.http.get<Employee>(`${BASE_URL}/${id}`);
+  }
+
+  updateEmployee(id:number, employee:Employee):Observable<any>{
+    return this.http.put<any>(`${BASE_URL}/${id}`, employee);
+  }
+
+  deleteEmployee(id:number):Observable<any>{
+    return this.http.delete<any>(`${BASE_URL}/${id}`);
+  }
 
 }
