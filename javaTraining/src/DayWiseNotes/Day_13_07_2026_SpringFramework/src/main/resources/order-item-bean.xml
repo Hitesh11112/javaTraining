@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context" xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"> <!-- bean definitions here -->
+
+	<bean id="ord" name="ord" class="com.coforge.beans.Order">
+		<constructor-arg name="orderId" value="1234"/>
+		<constructor-arg name="orderCost" value="50000"/>
+		<constructor-arg name="item" ref="item"/>
+	</bean>
+	
+	<!-- <bean id="item" name="item" class="com.coforge.beans.Item">
+		<constructor-arg name="itemId" value="123"></constructor-arg>	
+		<constructor-arg name="itemName" value="laptop"></constructor-arg>	
+		<constructor-arg name="itemCost" value="70000"></constructor-arg>	
+	</bean> -->
+
+	<bean id="item" class="com.coforge.beans.Item">
+ 		<property name="itemId" value="567"></property>
+ 		<property name="itemName" value="Monitor"></property>
+ 		<property name="itemCost" value="80000"></property>
+ 	</bean>
+
+</beans>
