@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app
+    version="4.0"
+    xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+    xmlns:javaee="http://xmlns.jcp.org/xml/ns/javaee"
+    xmlns:xml="http://www.w3.org/XML/1998/namespace"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd">
+  <display-name>Archetype Created Web Application</display-name>
+  
+  <context-param> 
+  	<param-name>driver</param-name>
+  	<param-value>com.mysql.cj.jdbc.Driver</param-value>
+  </context-param>
+  
+  <context-param> 
+  	<param-name>url</param-name>
+  	<param-value>jdbc:mysql://localhost:3306/coforge2db</param-value>
+  </context-param>
+
+
+  <context-param> 
+  	<param-name>uname</param-name>
+  	<param-value>root</param-value>  
+  </context-param>
+  
+  <context-param>   
+  	<param-name>pwd</param-name>
+  	<param-value>hitesh@123</param-value>
+  </context-param>
+
+  <error-page>
+  	<exception-type>java.lang.Exception</exception-type>
+  	<location>/error.jsp</location>
+  </error-page>
+
+  <error-page>
+  	<error-code>404</error-code>
+  	<location>/error.jsp</location>
+  </error-page>
+
+  <error-page>
+  	<error-code>500</error-code>
+  	<location>/error.jsp</location>
+  </error-page>
+
+</web-app>
