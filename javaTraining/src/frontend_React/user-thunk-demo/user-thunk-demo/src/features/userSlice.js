@@ -45,7 +45,7 @@ const getUserData = () => {
       if (success) {
         resolve({
           id: 1,
-          name: "Ankush",
+          name: "Hitesh",
           desg: "GET",
         });
       } else {
